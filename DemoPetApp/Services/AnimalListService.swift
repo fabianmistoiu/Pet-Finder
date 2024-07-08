@@ -6,7 +6,12 @@
 
 import Foundation
 
-class AnimalListService {
+protocol AnimalListServiceable {
+    func loadAnimals(page: Int, type: AnimalType?, location: Location?, distance: Int?, sizes: [Animal.Size]) async throws -> AnimalListResponse
+    func loadAnimalTypes() async throws -> [AnimalType]
+}
+
+class AnimalListService: AnimalListServiceable {
     let client: HttpClient
     init(client: HttpClient) {
         self.client = client

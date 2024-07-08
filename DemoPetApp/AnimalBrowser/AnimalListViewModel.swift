@@ -31,12 +31,12 @@ class AnimalListViewModel: ObservableObject {
     @Published var radius: Double = 100
     @Published var locationCoordinates: CLLocationCoordinate2D = AnimalListViewModel.defaultCoordinates
     
-    private let service: AnimalListService
+    private let service: AnimalListServiceable
     private var totalPages: Int = .max
     private var currentPage: Int = 0
     private var disposeBag = Set<AnyCancellable>()
     
-    init(animalService: AnimalListService) {
+    init(animalService: AnimalListServiceable) {
         service = animalService
         setupBindings()
     }
@@ -92,7 +92,7 @@ class AnimalListViewModel: ObservableObject {
         state = currentPage == 0 ? .initialLoad : .loadingNextPage
 
         do {
-            let animalResponse = try await service.loadAnimals(page: currentPage + 1, type: type, location: location, sizes: sizes.shuffled())
+            let animalResponse = try await service.loadAnimals(page: currentPage + 1, type: type, location: location, distance: nil, sizes: sizes.shuffled())
             animals.append(contentsOf: animalResponse.animals)
             totalPages = animalResponse.pagination.totalPages
             currentPage = animalResponse.pagination.currentPage
